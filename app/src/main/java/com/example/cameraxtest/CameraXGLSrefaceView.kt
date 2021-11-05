@@ -13,10 +13,15 @@ import java.nio.FloatBuffer
 
 class CameraXGLSrefaceView :GLSurfaceView, SurfaceTexture.OnFrameAvailableListener {
 
+    interface OnViewReadyListener {
+        fun onReady(surfaceTexture: SurfaceTexture);
+    }
+
     var mContext: Context? = null
     var textureId: Int = 0
 
     private var mCameraTexture: SurfaceTexture? = null
+    private var onViewReadyListener: OnViewReadyListener? = null
 
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
@@ -30,13 +35,8 @@ class CameraXGLSrefaceView :GLSurfaceView, SurfaceTexture.OnFrameAvailableListen
         requestRender()
     }
 
-    fun setSurfaceTexture(surfaceTexture: SurfaceTexture?) {
-        mCameraTexture = surfaceTexture
-        queueEvent(Runnable {
-
-            mCameraTexture?.attachToGLContext(textureId)
-        })
-
+    fun setOnViewReadyListener(listener: OnViewReadyListener) {
+        onViewReadyListener = listener
     }
 
     inner class Render : Renderer {
@@ -48,7 +48,7 @@ class CameraXGLSrefaceView :GLSurfaceView, SurfaceTexture.OnFrameAvailableListen
         private var mMVPMatrixHandle: Int = 0
 
         private var mPosCoordinate = floatArrayOf(-1f, -1f, -1f, 1f, 1f, -1f, 1f, 1f)
-        private var mTexCoordinate = floatArrayOf(0f, 1f, 0f, 0f, 1f, 1f, 1f, 0f)
+        private var mTexCoordinate = floatArrayOf(1f, 1f, 0f, 01f, 1f, 0f, 0f, 0f)
 
         private var mPosBuffer: FloatBuffer? = null
         private var mTexBuffer: FloatBuffer? = null
@@ -84,6 +84,8 @@ class CameraXGLSrefaceView :GLSurfaceView, SurfaceTexture.OnFrameAvailableListen
 
             GLES20.glEnableVertexAttribArray(uPosHandle)
             GLES20.glEnableVertexAttribArray(aTexHandle)
+            mCameraTexture = SurfaceTexture(textureId)
+            onViewReadyListener?.onReady(mCameraTexture!!)
         }
 
         private fun createAndBindVideoTexture() {
