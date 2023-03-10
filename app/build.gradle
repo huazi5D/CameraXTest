@@ -7,13 +7,19 @@ android {
     compileSdk 31
     defaultConfig {
         applicationId "com.example.cameraxtest"
-        minSdk 21
+        minSdk 26
         targetSdk 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
+        }
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11 -DGL_GLEXT_PROTOTYPES -DEGL_EGLEXT_PROTOTYPES"
+            }
         }
     }
     buildTypes {
@@ -31,6 +37,13 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.22.1"
+        }
     }
 }
 
