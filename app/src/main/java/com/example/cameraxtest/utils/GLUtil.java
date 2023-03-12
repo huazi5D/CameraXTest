@@ -6,6 +6,8 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+import java.nio.IntBuffer;
+
 import javax.microedition.khronos.opengles.GL10;
 
 public class GLUtil {
@@ -83,14 +85,16 @@ public class GLUtil {
         return shader;
     }
 
-    public static int createOESTexture() {
+    public static int createOESTexture(int width, int height) {
         int[] texture = new int[1];
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glGenTextures(1, texture, 0);
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture[0]);
         GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GL10.GL_TEXTURE_MIN_FILTER,GL10.GL_LINEAR);
         GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
+        GLES20.glTexImage2D(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0, GLES20.GL_RGBA, width, height, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
         checkError();
         return texture[0];
     }
@@ -129,11 +133,11 @@ public class GLUtil {
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, framebuffer[0]);
         GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture, 0);
 
-        int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
+        int status = GLES20.glCheckFramebufferStatus(GLES11Ext.GL_FRAMEBUFFER_OES);
         if (status != GLES20.GL_FRAMEBUFFER_COMPLETE) {
-            throw new RuntimeException("Failed to set up render buffer with status "+status+" and error "+GLES20.glGetError());
+            throw new RuntimeException("Failed to createOesFrameBuffer with status " + status);
         }
-        unbindFBO();
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
         return framebuffer[0];
     }
 

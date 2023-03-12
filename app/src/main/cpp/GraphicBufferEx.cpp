@@ -52,7 +52,7 @@ void GraphicBufferEx::create(int width, int height,
     buffDesc.width = width;
     buffDesc.height = height;
     buffDesc.layers = 1;
-    buffDesc.format = format;
+    buffDesc.format = AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM;
     buffDesc.usage = USAGE;
     buffDesc.stride = width;
     buffDesc.rfu0 = 0;

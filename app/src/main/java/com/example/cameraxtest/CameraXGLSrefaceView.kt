@@ -61,14 +61,13 @@ class CameraXGLSrefaceView :GLSurfaceView, SurfaceTexture.OnFrameAvailableListen
 //            GLUtil.bindFBO(frameBufferId, texture2d)
             GLUtil.bindOesFBO(frameBufferId, oesTexture)
 
-            GLES20.glViewport(0, 0, camera_height, camera_width)
-            cameraFilter.updateTextureId(oesId)
+            GLES20.glViewport(0, 0, camera_width, camera_height)
             cameraFilter.draw()
             GLUtil.checkError("cameraFilter.draw()")
             GLUtil.unbindFBO()
             GLUtil.checkError("unbindFBO")
 
-//            var array = mGLCopyJni?.buffer
+            var array = mGLCopyJni?.buffer
             GLES20.glViewport(0, 0, w, h)
 //            textureFilter.updateTextureId(texture2d)
 //            textureFilter.draw()
@@ -84,14 +83,14 @@ class CameraXGLSrefaceView :GLSurfaceView, SurfaceTexture.OnFrameAvailableListen
 //            mGLCopyJni = GLCopyJni(1080, 1920, texture2d)
 //            frameBufferId = GLUtil.createFrameBuffer(texture2d)
 
-            oesTexture = GLUtil.createOESTexture()
+            oesTexture = GLUtil.createOESTexture(camera_width, camera_height)
             // 必须先绑定 否则下一步创建framebuffer会失败
             mGLCopyJni = GLCopyJni(1080, 1920, oesTexture)
             frameBufferId = GLUtil.createOesFrameBuffer(oesTexture)
         }
 
         override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-            oesId = GLUtil.createOESTexture()
+            oesId = GLUtil.createOESTexture(camera_width, camera_height)
             surfaceTexture = SurfaceTexture(oesId)
             surfaceTexture?.setOnFrameAvailableListener(this@CameraXGLSrefaceView)
             onViewReadyListener?.onReady(surfaceTexture!!)

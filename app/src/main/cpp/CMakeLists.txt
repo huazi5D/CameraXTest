@@ -10,7 +10,7 @@ find_library(log-lib log)
 target_link_libraries(hardware
 
         EGL
-        GLESv3
+        GLESv2
         android
         # Links the target library to the log library
         # included in the NDK.
