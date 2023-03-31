@@ -26,6 +26,26 @@ public class CameraFilter extends BaseFilter{
             "    texCoordinate = inputTexCoordinate.xy;\n" +
             "}";
 
+//             yuv转换的一个例子
+//             #version 300 es
+//             #extension GL_EXT_YUV_target: require
+//             precision mediump float;
+//             in vec2 v_texCoord;
+//             layout(yuv) out vec4 outColor;
+//             uniform sampler2D s_texture;
+//             void main()
+//             {
+//                 //色彩空间标准公式
+//                 yuvCscStandardEXT conv_standard = itu_601_full_range;
+
+//                 vec4 rgbaColor = texture(s_texture, v_texCoord);
+//                 //dealwith rgba
+
+//                 vec3 rgbColor = rgbaColor.rgb;
+//                 vec3 yuv = rgb_2_yuv(rgbColor, conv_standard);//实现 RGB 到 YUV 的格式转换
+//                 outColor = vec4(yuv, 1.0);
+//             }
+
 //    private static final String fraShader =
 //            "#version 300 es\n" +
 //            "#extension GL_OES_EGL_image_external_essl3 : require\n" +
